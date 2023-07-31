@@ -17,7 +17,7 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    def parse(self, *args):
+    def parce(self, *args):
         pass
 
     # TODO: Передвинуть функционал join/leave в commands.py
