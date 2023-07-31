@@ -1,17 +1,35 @@
 import os
 import dotenv
+from abc import ABC, abstractmethod
 
-dotenv.load_dotenv(".env")
+
+class BaseSettings(ABC):
+    def __init__(self):
+        dotenv.load_dotenv(".env")
+
+    @abstractmethod
+    def __dict__(self):
+        pass
 
 
-class Bot_Settings:
+class Bot_Settings(BaseSettings):
+    dotenv.load_dotenv(".env")
+
     token: str = os.getenv("TOKEN")
     bot: str = "HonestMusicBot"
     id: str = os.getenv("ID")
     prefix: str = "/"
 
+    def __dict__(self):
+        return {
+            "token": self.token,
+            "bot": self.bot,
+            "id": self.id,
+            "prefix": self.prefix
+        }
 
-class FFMPEG_Settings:
+
+class FFMPEG_Settings(BaseSettings):
     options: str = "-vn"
     before_options: str = "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5"
 
@@ -22,7 +40,7 @@ class FFMPEG_Settings:
         }
 
 
-class YDL_Settings:
+class YDL_Settings(BaseSettings):
     format: str = "bestaudio/best"
     extractaudio: bool = True
     noplaylist: bool = True

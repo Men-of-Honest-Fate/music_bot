@@ -9,10 +9,18 @@ dotenv.load_dotenv()
 
 
 class Yandex(BaseProvider):
-    login = os.getenv('YA_LOGIN')
-    password = os.getenv('YA_PASS')
-
     def __init__(self):
+        self.login = os.getenv('YA_LOGIN')
+        self.password = os.getenv('YA_PASS')
+        pass
+
+    async def add(self, ctx, *args):
+        pass
+
+    async def play(self, ctx, *args):
+        pass
+
+    async def parce(self, item):
         pass
 
 

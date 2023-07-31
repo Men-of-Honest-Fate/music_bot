@@ -1,24 +1,20 @@
 from abc import ABC, abstractmethod
-from ...settings import get_mpeg_settings
-
 
 class BaseProvider(ABC):
     @abstractmethod
     def __init__(self):
-        self.ctx = None
-        self.ffmpeg_settings: dict = get_mpeg_settings().__dict__()
-
-    @abstractmethod
-    def add(self, *args):
         pass
 
     @abstractmethod
-    def play(self, *args):
+    async def play(self, ctx, *args):
         pass
 
     @abstractmethod
-    def parce(self, *args):
+    async def parce(self, item):
         pass
+
+    async def get_queue(self):
+
 
     # TODO: Передвинуть функционал join/leave в commands.py
     # @staticmethod
