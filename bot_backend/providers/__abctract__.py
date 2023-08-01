@@ -1,6 +1,10 @@
 from abc import ABC, abstractmethod
+from bot_backend.models.songs import BaseSong
+
 
 class BaseProvider(ABC):
+    song_queue: list[BaseSong] = []
+
     @abstractmethod
     def __init__(self):
         pass
@@ -14,7 +18,7 @@ class BaseProvider(ABC):
         pass
 
     async def get_queue(self):
-
+        return self.song_queue
 
     # TODO: Передвинуть функционал join/leave в commands.py
     # @staticmethod
