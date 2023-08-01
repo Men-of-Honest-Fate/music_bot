@@ -65,6 +65,7 @@ class YDL_Settings(BaseSettings):
 class YA_Account:
     login: str = os.getenv("LOGIN")
     password: str = os.getenv("PASS")
+    YMToken: str = os.getenv("YA_TOKEN")
 
     def __dict__(self):
         return {"login": self.login, "password": self.password}

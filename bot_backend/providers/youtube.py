@@ -110,8 +110,8 @@ class Youtube(BaseProvider, BaseSong):
                 song.voice_channel = self.voice_channel
                 self.song_queue.append(song)
                 if (
-                    not get(ctx.bot.voice_clients, guild=ctx.guild)
-                    or not get(ctx.bot.voice_clients, guild=ctx.guild).is_playing()
+                        not get(ctx.bot.voice_clients, guild=ctx.guild)
+                        or not get(ctx.bot.voice_clients, guild=ctx.guild).is_playing()
                 ):
                     await self.play_music(ctx)
 
@@ -123,8 +123,8 @@ class Youtube(BaseProvider, BaseSong):
 
     async def clear(self, ctx):
         if (
-            get(ctx.bot.voice_clients, guild=ctx.guild) is not None
-            and get(ctx.bot.voice_clients, guild=ctx.guild).is_playing()
+                get(ctx.bot.voice_clients, guild=ctx.guild) is not None
+                and get(ctx.bot.voice_clients, guild=ctx.guild).is_playing()
         ):
             self.vc.stop()
         self.song_queue = []
@@ -168,7 +168,6 @@ class Youtube(BaseProvider, BaseSong):
     #             source=songs_queue.get_value()[0][2],
     #             **self.ffmpeg_settings),
     #             after=lambda e: self.step_and_remove(voice_client))
-
 
 # @bot.event
 # async def on_ready():

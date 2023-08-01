@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
-
+from typing import Any
 from bot_backend.models.songs import BaseSong
 
 
 class BaseProvider(ABC):
     song_queue: list[BaseSong] = []
+    vc: Any = None
 
     @abstractmethod
     def __init__(self):
