@@ -1,8 +1,9 @@
 import os
 import sqlite3
-import dotenv
 
+import dotenv
 from yandex_music import Client
+
 from .__abctract__ import BaseProvider
 
 dotenv.load_dotenv()
@@ -10,8 +11,8 @@ dotenv.load_dotenv()
 
 class Yandex(BaseProvider):
     def __init__(self):
-        self.login = os.getenv('YA_LOGIN')
-        self.password = os.getenv('YA_PASS')
+        self.login = os.getenv("YA_LOGIN")
+        self.password = os.getenv("YA_PASS")
         pass
 
     async def add(self, ctx, *args):

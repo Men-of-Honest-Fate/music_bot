@@ -1,9 +1,11 @@
 import discord
-from bot_backend.settings import get_youtube_settings, get_mpeg_settings
 from discord.utils import get
 from youtube_dl import YoutubeDL
-from .__abctract__ import BaseProvider
+
 from bot_backend.models.songs import BaseSong
+from bot_backend.settings import get_mpeg_settings, get_youtube_settings
+
+from .__abctract__ import BaseProvider
 
 
 class Youtube(BaseProvider, BaseSong):
@@ -27,24 +29,32 @@ class Youtube(BaseProvider, BaseSong):
                     return False
             else:
                 try:
-                    info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
+                    info = ydl.extract_info("ytsearch:%s" % item, download=False)[
+                        "entries"
+                    ][0]
                 except:
                     return False
 
-        return {'source': info['formats'][0]['url'], 'title': info['title'], 'query': item}
+        return {
+            "source": info["formats"][0]["url"],
+            "title": info["title"],
+            "query": item,
+        }
 
     def play_next(self):
         if len(self.song_queue) > 0:
             self.is_playing = True
 
             # get the first url
-            m_url = self.song_queue[0].song_info['source']
+            m_url = self.song_queue[0].song_info["source"]
 
             # remove the first element as you are currently playing it
             self.song_queue.pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.ffmpeg_settings),
-                         after=lambda e: self.play_next())
+            self.vc.play(
+                discord.FFmpegPCMAudio(m_url, **self.ffmpeg_settings),
+                after=lambda e: self.play_next(),
+            )
         else:
             self.is_playing = False
 
@@ -52,7 +62,7 @@ class Youtube(BaseProvider, BaseSong):
     async def play_music(self, ctx):
         self.is_playing = True
         if len(self.song_queue) > 0:
-            m_url = self.song_queue[0].song_info['source']
+            m_url = self.song_queue[0].song_info["source"]
 
             # try to connect to voice channel if you are not already connected
             if get(ctx.bot.voice_clients, guild=ctx.guild) is None:
@@ -68,7 +78,10 @@ class Youtube(BaseProvider, BaseSong):
 
             # remove the first element as you are currently playing it
             self.song_queue.pop(0)
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.ffmpeg_settings), after=lambda e: self.play_next())
+            self.vc.play(
+                discord.FFmpegPCMAudio(m_url, **self.ffmpeg_settings),
+                after=lambda e: self.play_next(),
+            )
         else:
             self.is_playing = False
 
@@ -88,15 +101,18 @@ class Youtube(BaseProvider, BaseSong):
             if type(self.song) == type(True):
                 await ctx.send(
                     "Could not download the song. Incorrect format try another keyword. This could be due to playlist "
-                    "or a livestream format.")
+                    "or a livestream format."
+                )
             else:
                 await ctx.send("Song added to the queue")
                 song = BaseSong()
                 song.song_info = self.song
                 song.voice_channel = self.voice_channel
                 self.song_queue.append(song)
-                if not get(ctx.bot.voice_clients, guild=ctx.guild) or not get(ctx.bot.voice_clients,
-                                                                              guild=ctx.guild).is_playing():
+                if (
+                    not get(ctx.bot.voice_clients, guild=ctx.guild)
+                    or not get(ctx.bot.voice_clients, guild=ctx.guild).is_playing()
+                ):
                     await self.play_music(ctx)
 
     async def skip(self, ctx):
@@ -106,8 +122,10 @@ class Youtube(BaseProvider, BaseSong):
             await self.play_music(ctx)
 
     async def clear(self, ctx):
-        if get(ctx.bot.voice_clients, guild=ctx.guild) is not None and get(ctx.bot.voice_clients,
-                                                                           guild=ctx.guild).is_playing():
+        if (
+            get(ctx.bot.voice_clients, guild=ctx.guild) is not None
+            and get(ctx.bot.voice_clients, guild=ctx.guild).is_playing()
+        ):
             self.vc.stop()
         self.song_queue = []
         await ctx.send("Music queue cleared")
@@ -150,6 +168,7 @@ class Youtube(BaseProvider, BaseSong):
     #             source=songs_queue.get_value()[0][2],
     #             **self.ffmpeg_settings),
     #             after=lambda e: self.step_and_remove(voice_client))
+
 
 # @bot.event
 # async def on_ready():

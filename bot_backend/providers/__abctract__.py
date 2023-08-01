@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from bot_backend.models.songs import BaseSong
 
 

@@ -3,4 +3,4 @@
 /workspace.xml
 .env
 /.idea
-/__pycache__
+*.pyc

@@ -1,12 +1,15 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-from .settings import get_bot_settings
-from .providers.__convert__ import convert
-from .providers.exceptions import ProviderNotSupported
-from .providers.__abctract__ import BaseProvider
 
-bot = commands.Bot(command_prefix=get_bot_settings().prefix, intents=discord.Intents().all())
+from bot_backend.providers.__abctract__ import BaseProvider
+from bot_backend.providers.__convert__ import convert
+from bot_backend.providers.exceptions import ProviderNotSupported
+from bot_backend.settings import get_bot_settings
+
+bot = commands.Bot(
+    command_prefix=get_bot_settings().prefix, intents=discord.Intents().all()
+)
 
 
 @bot.command()
@@ -15,10 +18,14 @@ async def start(ctx):
     await ctx.send(f"Привет, {author.mention}!")
 
 
-@bot.command(name="play", aliases=["p"], help="Plays a selected song from youtube/spotify/yandex music")
+@bot.command(
+    name="play",
+    aliases=["p"],
+    help="Играет выбранную композицию/плейлист из Youtube/Spotify/Яндекс Музыки",
+)
 async def play(ctx, *args):
     query = " ".join(args)
-    provider = ''
+    provider = ""
     if "yandex.ru" in query:
         provider = "yandex"
     elif "youtube.com" in query:
@@ -33,7 +40,11 @@ async def play(ctx, *args):
     await provider.play(ctx, query)
 
 
-@bot.command(name="leave", aliases=["disconnect", "l", "d"], help="Kick the bot from VC")
+@bot.command(
+    name="leave",
+    aliases=["disconnect", "l", "d"],
+    help="Отключится от голосового канала",
+)
 async def disconnect(ctx):
     if get(ctx.bot.voice_clients, guild=ctx.guild):
         await ctx.voice_client.disconnect()
@@ -41,7 +52,7 @@ async def disconnect(ctx):
         pass
 
 
-@bot.command(name="join", aliases=["j"], help="Kick the bot from VC")
+@bot.command(name="join", aliases=["j"], help="Подключиться к голосовому каналу")
 async def connect(ctx):
     if not get(ctx.bot.voice_clients, guild=ctx.guild):
         await ctx.author.voice.channel.connect()
@@ -49,7 +60,7 @@ async def connect(ctx):
         pass
 
 
-@bot.command(name="queue", aliases=["q"], help="Displays the current songs in queue")
+@bot.command(name="queue", aliases=["q"], help="Отобразить очередь треков")
 async def queue(ctx):
     music_queue = BaseProvider.song_queue
     retval = ""
@@ -59,7 +70,7 @@ async def queue(ctx):
             retval += "\n..."
             break
 
-        retval += music_queue[i].song_info['title'] + "\n"
+        retval += music_queue[i].song_info["title"] + "\n"
 
     if retval != "":
         await ctx.send(retval)
@@ -67,7 +78,7 @@ async def queue(ctx):
         await ctx.send("No music in queue")
 
 
-@bot.command(name="pause", help="Pauses the current song being played")
+@bot.command(name="pause", help="Ставит на паузу текущую композицию")
 async def pause(ctx):
     vc = get(ctx.bot.voice_clients, guild=ctx.guild)
     if vc and vc.is_playing():
@@ -78,7 +89,9 @@ async def pause(ctx):
         pass
 
 
-@bot.command(name="resume", aliases=["r"], help="Resumes playing with the discord bot")
+@bot.command(
+    name="resume", aliases=["r"], help="Продолжает проигрывание текущей композиции"
+)
 async def resume(ctx):
     vc = get(ctx.bot.voice_clients, guild=ctx.guild)
     if vc and not vc.is_playing():
@@ -89,9 +102,13 @@ async def resume(ctx):
         pass
 
 
-@bot.command(name="skip", aliases=["s"], help="Skips the current song being played")
+@bot.command(
+    name="skip",
+    aliases=["s"],
+    help="Пропускает текущую композицию и переходит к следующей",
+)
 async def skip(ctx):
     music_queue = BaseProvider.song_queue
     if get(ctx.bot.voice_clients, guild=ctx.guild):
         get(ctx.bot.voice_clients, guild=ctx.guild).stop()
-        await play(ctx, music_queue[0].song_info['query'])
+        await play(ctx, music_queue[0].song_info["query"])

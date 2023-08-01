@@ -1,6 +1,7 @@
 import os
-import dotenv
 from abc import ABC, abstractmethod
+
+import dotenv
 
 
 class BaseSettings(ABC):
@@ -18,14 +19,14 @@ class Bot_Settings(BaseSettings):
     token: str = os.getenv("TOKEN")
     bot: str = "HonestMusicBot"
     id: str = os.getenv("ID")
-    prefix: str = "/"
+    prefix: str = "!"
 
     def __dict__(self):
         return {
             "token": self.token,
             "bot": self.bot,
             "id": self.id,
-            "prefix": self.prefix
+            "prefix": self.prefix,
         }
 
 
@@ -57,7 +58,7 @@ class YDL_Settings(BaseSettings):
             "simulate": self.simulate,
             "preferredquality": self.preferredquality,
             "preferredcodec": self.preferredcodec,
-            "key": self.key
+            "key": self.key,
         }
 
 
@@ -66,10 +67,7 @@ class YA_Account:
     password: str = os.getenv("PASS")
 
     def __dict__(self):
-        return {
-            "login": self.login,
-            "password": self.password
-        }
+        return {"login": self.login, "password": self.password}
 
 
 def get_bot_settings() -> Bot_Settings:
